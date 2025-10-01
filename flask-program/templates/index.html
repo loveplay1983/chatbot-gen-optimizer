@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Text Optimizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot Text Optimizer</h1>
+        <textarea id="input" placeholder="Paste chatbot text here..."></textarea>
+        <textarea id="output" placeholder="Optimized Markdown text will appear here..." readonly></textarea>
+        <div class="button-group">
+            <button onclick="copyOutput()">Copy Output</button>
+            <button onclick="clearFields()">Clear</button>
+        </div>
+    </div>
+    <script>
+        const input = document.getElementById("input");
+        const output = document.getElementById("output");
+
+        // Real-time optimization via AJAX
+        input.addEventListener("input", function() {
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "input_text=" + encodeURIComponent(input.value)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
+            .then(data => output.value = data.optimized)
+            .catch(error => console.error("Error:", error));
+        });
+
+        // Copy output to clipboard
+        function copyOutput() {
+            output.select();
+            try {
+                document.execCommand("copy");
+                alert("Copied to clipboard!");
+            } catch (err) {
+                alert("Failed to copy: " + err);
+            }
+        }
+
+        // Clear both fields
+        function clearFields() {
+            input.value = "";
+            output.value = "";
+        }
+    </script>
+</body>
+</html>

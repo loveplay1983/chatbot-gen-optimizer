@@ -1,0 +1,1 @@
+pyinstaller --onefile --windowed --add-data "site-packages/PySide6/plugins;PySide6/plugins" --hidden-import PySide6.QtWidgets --hidden-import PySide6.QtGui --hidden-import PySide6.QtCore --name "TextOptimizer" app.py
